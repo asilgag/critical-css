@@ -1,0 +1,3 @@
+services:
+  critical_css:
+    class: Drupal\critical_css\Service\CriticalCssService

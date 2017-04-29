@@ -1,0 +1,20 @@
+<?php
+/**
+ * Implements hook_page_preprocess_html().
+ */
+function critical_css_preprocess_html(&$variables)
+{
+  $criticalCss = \Drupal::service('critical_css')->getCriticalCss();
+
+  if ($criticalCss) {
+    // Inline critical css as a string
+    $variables['page']['#attached']['html_head'][] = [
+      [
+        '#tag' => 'style',
+        '#value' => $criticalCss,
+      ],
+      'critical-css'
+    ];
+  }
+
+}

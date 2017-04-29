@@ -1,0 +1,7 @@
+critical_css.settings:
+  path: '/admin/config/development/performance/critical-css'
+  defaults:
+    _form: \Drupal\critical_css\Form\CriticalCssSettingsForm
+    _title: 'Critical CSS: Settings'
+  requirements:
+    _permission: 'administer site configuration'

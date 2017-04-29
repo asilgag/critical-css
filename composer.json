@@ -1,0 +1,12 @@
+{
+  "name": "asilgag/critical_css",
+  "description": "Critical CSS",
+  "type": "drupal-module",
+  "homepage": "https://twitter.com/asilgag",
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "8.0.x-dev"
+    }
+  }
+}

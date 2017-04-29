@@ -1,0 +1,8 @@
+name: Critical CSS
+description: Inlines a critical CSS file in HTML head, and loads non-critical CSS asynchronously using W3C Spec's preload.
+package: Page Speed Optimization
+type: module
+configure: critical_css.settings
+
+core: 8.x
+version: 1.0
