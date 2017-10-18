@@ -16,10 +16,11 @@ var config = {
     critical: {
         width: 1280,
         height: 900,
-        dest: 'web/css/critical/',
+        dest: 'css/critical/',
         urls: {
-            '/': 'home',
-            '/cuidadores': 'cuidadores'
+            "/": "home",
+            "/sample-article": "article",
+            "/sample-page": "page"
         }
     }
 };
