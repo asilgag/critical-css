@@ -48,6 +48,7 @@ class CriticalCssService {
     $entity = null;
     $entityId = null;
     $bundleName = null;
+    $sanitizedPath = null;
 
     // Get current entity's data
     // Try node and taxonomy_term
@@ -63,11 +64,18 @@ class CriticalCssService {
       $entityId = $entity->id();
       $bundleName = $entity->bundle();
     } else {
-      return null;
+      // If no entity is found, get $sanitizedPath
+      $currentPath = \Drupal::service('path.current')->getPath();
+      $sanitizedPath = preg_replace("/^\//", "", $currentPath);
+      $sanitizedPath = preg_replace("/[^a-zA-Z0-9]/", "", $sanitizedPath);
+      $sanitizedPath = str_replace("/", "-", $sanitizedPath);
+      if (empty($sanitizedPath)) {
+        return null;
+      }
     }
 
     // Check if this entity id is excluded
-    if ($this->isEntityIdExcluded($entityId)) {
+    if ($entityId && $this->isEntityIdExcluded($entityId)) {
       return null;
     }
 
@@ -79,6 +87,12 @@ class CriticalCssService {
 
     // Get critical CSS contents by name
     $criticalCssData = $this->getCriticalCssByKey($bundleName);
+    if ($criticalCssData) {
+      return $criticalCssData;
+    }
+
+    // Get critical CSS contents by path
+    $criticalCssData = $this->getCriticalCssByKey($sanitizedPath);
     if ($criticalCssData) {
       return $criticalCssData;
     }
@@ -119,6 +133,7 @@ class CriticalCssService {
    * Check if module is enabled
    *
    * @return boolean
+   * @return boolean
    */
   public function isEnabled() {
     $config = \Drupal::config('critical_css.settings');
@@ -158,7 +173,7 @@ class CriticalCssService {
 
     $themeName = \Drupal::config('system.theme')->get('default');
     $themePath = drupal_get_path('theme', $themeName);
-    $criticalCssDirPath = \Drupal::config('critical_css.settings')->get('dir_path');
+    $criticalCssDirPath = str_replace('..', '', \Drupal::config('critical_css.settings')->get('dir_path'));
     $criticalCssDir = $themePath.'/'.$criticalCssDirPath;
 
     $criticalCssFile = $criticalCssDir . '/' . $key . '.css';
@@ -166,7 +181,7 @@ class CriticalCssService {
       return null;
     }
 
-    $criticalCssData = file_get_contents($criticalCssFile);
+    $criticalCssData = trim(file_get_contents($criticalCssFile));
     $this->setCss($criticalCssData);
     return $criticalCssData;
   }

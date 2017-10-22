@@ -28,7 +28,7 @@ class CriticalCssSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Enabled'),
       '#default_value' => $config->get('enabled'),
-      '#description' => t('Enable critical CSS for all anonymous visits. You must manually rebuild Drupal cache when this value changes'),
+      '#description' => t("Enable critical CSS for all anonymous visits. You must manually rebuild Drupal's cache when this value changes"),
     ];
 
     $form['critical_css_help'] = [
@@ -52,7 +52,7 @@ class CriticalCssSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Critical CSS files base directory (relative to %theme_path)', ['%theme_path' => drupal_get_path('theme', \Drupal::config('system.theme')->get('default'))]),
       '#required' => TRUE,
-      '#description' => t('Enter a directory path relative to current theme, where critical CSS files are located (e.g., dist/css/critical). Inside that directory, "Critical CSS" will try to find any file named "{bundle_type}.css" or "{entity_id}.css" (e.g., article.css, page.css, 1234.css etc)'),
+      '#description' => t('Enter a directory path relative to current theme, where critical CSS files are located (e.g., css/critical). Inside that directory, "Critical CSS" will try to find any file named "{bundle_type}.css" (e.g., article.css), "{url}.css" (e.g., page-url.css) or {entity_id}.css" (e.g., 1234.css)'),
       '#default_value' => $config->get('dir_path'),
     );
 
