@@ -1,17 +1,44 @@
 <?php
+
+use Drupal\Component\Utility\Html;
+
 /**
  * Implements hook_page_preprocess_html().
  */
 function critical_css_preprocess_html(&$variables)
 {
-  $criticalCss = \Drupal::service('critical_css')->getCriticalCss();
+  $criticalCssService = \Drupal::service('critical_css');
+  $matchedFilePath = $criticalCssService->getMatchedFilePath();
 
-  if ($criticalCss) {
+  // Show debug info if twig debug is on
+  $debugInfoStart = null;
+  $debugInfoEnd = null;
+  $twig_service = \Drupal::service('twig');
+  if ($twig_service->isDebug()) {
+    $filePaths = $criticalCssService->getFilePaths();
+    $debugInfoStart  = "\n/* CRITICAL CSS DEBUG */\n";
+    $debugInfoStart .= "/* FILE NAME SUGGESTIONS:\n";
+    foreach ($filePaths as $filePath) {
+      $flag = ($filePath == $matchedFilePath) ? 'x' : '*';
+      $debugInfoStart .= "\t $flag $filePath\n";
+    }
+    $debugInfoStart .= "*/\n";
+
+    if ($matchedFilePath) {
+      $debugInfoStart .= "/* BEGIN OUTPUT from " . Html::escape($matchedFilePath) . " */\n";
+      $debugInfoEnd = "\n/* END OUTPUT from " . Html::escape($matchedFilePath) . " */\n";
+    } else {
+      $debugInfoStart .= "/* NONE MATCHED */\n";
+    }
+  }
+
+  $criticalCss = $criticalCssService->getCriticalCss();
+  if ($criticalCss || $twig_service->isDebug()) {
     // Inline critical css as a string
     $variables['page']['#attached']['html_head'][] = [
       [
         '#tag' => 'style',
-        '#value' => $criticalCss,
+        '#value' => $debugInfoStart . $criticalCss . $debugInfoEnd,
       ],
       'critical-css'
     ];
