@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\critical_css;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -13,8 +14,9 @@ class CriticalCssServiceProvider extends ServiceProviderBase {
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
-    // Overrides asset.css.collection_renderer to preload CSS links
+    // Overrides asset.css.collection_renderer to preload CSS links.
     $definition = $container->getDefinition('asset.css.collection_renderer');
     $definition->setClass('Drupal\critical_css\Asset\CriticalCssCollectionRenderer');
   }
+
 }
